@@ -1,0 +1,6 @@
+[submodule "gpio-lcd"]
+	path = gpio-lcd
+	url = git@github.com:kim3er/gpio-lcd.git
+[submodule "gpio-events"]
+	path = gpio-events
+	url = git@github.com:kim3er/gpio-events.git
