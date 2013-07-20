@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from gpio-lcd import lcd
+from gpio_lcd import lcd
 import time
 from datetime import datetime
 
