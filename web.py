@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import RPi.GPIO as GPIO
 from gpio_lcd import lcd
 import time
 from datetime import datetime
@@ -27,4 +28,5 @@ if __name__ == "__main__":
 			time.sleep(60)
 		except:
 			logging.exception('Got exception on main handler' + datetime.now().strftime('%T'))
+			my_lcd.__del__()
 			raise
