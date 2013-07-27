@@ -9,7 +9,7 @@ import json
 import logging
 
 log_file = '/home/pi/lcd_error.log'
-logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,)
+logging.basicConfig(filename=log_file,level=logging.DEBUG,)
 
 my_lcd = lcd.Lcd()
 
