@@ -9,6 +9,7 @@ import urllib2
 import json
 import logging
 import pystache
+import atexit
 
 log_file = '/home/pi/lcd_error.log'
 logging.basicConfig(filename=log_file,level=logging.DEBUG,)
@@ -20,6 +21,14 @@ def log(text, type = 'exception'):
 
 def stache(text, context):
 	return pystache.render(text, context)
+
+def goodbye():
+	log('Goodbye', 'debug')
+	my_lcd.clear()
+	GPIO.output(LED_ON, False)
+	GPIO.cleanup()
+
+atexit.register(goodbye)
 
 if __name__ == "__main__":
 	log('Script started', 'debug')
@@ -48,9 +57,9 @@ if __name__ == "__main__":
 			time.sleep(60)
 	except:
 		log('Got exception on main handler')
-		my_lcd.__del__()
+		goodbye()
 		raise
 
 	log('Script Exited', 'debug')
-	my_lcd.__del__()
+	goodbye()
 
