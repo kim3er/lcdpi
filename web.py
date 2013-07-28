@@ -16,7 +16,7 @@ logging.basicConfig(filename=log_file,level=logging.DEBUG,)
 my_lcd = lcd.Lcd()
 
 def log(text, type = 'exception'):
-	getattr(logging, type, '[' + datetime.now().strftime('%T') + '] ' + text)
+	getattr(logging, type)('[' + datetime.now().strftime('%T') + '] ' + text)
 
 def stache(text, context):
 	return pystache.render(text, context)
