@@ -8,29 +8,49 @@ from datetime import datetime
 import urllib2
 import json
 import logging
+import pystache
 
 log_file = '/home/pi/lcd_error.log'
 logging.basicConfig(filename=log_file,level=logging.DEBUG,)
 
 my_lcd = lcd.Lcd()
 
+def log(text, type = 'exception'):
+	getattr(logging, type, '[' + datetime.now().strftime('%T') + '] ' + text)
+
+def stache(text, context):
+	return pystache.render(text, context)
+
 if __name__ == "__main__":
-	logging.debug('Script started: ' + datetime.now().strftime('%T'))
+	log('Script started', 'debug')
 
 	try:
 		while True:
-			text = urllib2.urlopen('http://www.dogma.co.uk/lcd.html').read()
-			obj = json.loads(text)
-			my_lcd.write_line(obj['1'], lcd.LCD_LINE_1, lcd.center)
-			my_lcd.write_line(datetime.now().strftime('%T'), lcd.LCD_LINE_2, lcd.center)
-			my_lcd.write_line(obj['3'], lcd.LCD_LINE_3, lcd.center)
-			my_lcd.write_line(obj['4'], lcd.LCD_LINE_4, lcd.center)
+			try:
+				text = urllib2.urlopen('http://www.dogma.co.uk/lcd.html').read()
+			except:
+				log('Unable to contact server')
+				continue
+
+			try:
+				obj = json.loads(text)
+			except:
+				log('Invalid JSON returned from server')
+				continue
+
+			context = { 'd': datetime.now().strftime('%T') }
+
+			my_lcd.write_line(stache(obj['1'], context), lcd.LCD_LINE_1, lcd.center)
+			my_lcd.write_line(stache(obj['2'], context), lcd.LCD_LINE_2, lcd.center)
+			my_lcd.write_line(stache(obj['3'], context), lcd.LCD_LINE_3, lcd.center)
+			my_lcd.write_line(stache(obj['4'], context), lcd.LCD_LINE_4, lcd.center)
+
 			time.sleep(60)
 	except:
-		logging.exception('Got exception on main handler' + datetime.now().strftime('%T'))
+		log('Got exception on main handler')
 		my_lcd.__del__()
 		raise
 
+	log('Script Exited', 'debug')
 	my_lcd.__del__()
-	logging.exception('Script Exited: ' + datetime.now().strftime('%T'))
 
