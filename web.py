@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import RPi.GPIO as GPIO
 from gpio_lcd import lcd
 import time
 from datetime import datetime
@@ -24,9 +23,7 @@ def stache(text, context):
 
 def goodbye():
 	log('Goodbye', 'debug')
-	my_lcd.clear()
-	GPIO.output(LED_ON, False)
-	GPIO.cleanup()
+	my_lcd.__del__()
 
 atexit.register(goodbye)
 
@@ -57,9 +54,5 @@ if __name__ == "__main__":
 			time.sleep(60)
 	except:
 		log('Got exception on main handler')
-		goodbye()
 		raise
-
-	log('Script Exited', 'debug')
-	goodbye()
 
